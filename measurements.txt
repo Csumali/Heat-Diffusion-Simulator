@@ -1,0 +1,71 @@
+[css534@uw1-320-16 prog2_ugrad]$ cat mpd.hosts
+uw1-320-16.uwb.edu
+uw1-320-17.uwb.edu
+uw1-320-18.uwb.edu
+uw1-320-19.uwb.edu
+
+
+[css534@uw1-320-16 prog2_ugrad]$ mpdboot -n 4 -v
+running mpdallexit on uw1-320-16
+LAUNCHED mpd on uw1-320-16  via  
+RUNNING: mpd on uw1-320-16
+LAUNCHED mpd on uw1-320-17.uwb.edu  via  uw1-320-16
+LAUNCHED mpd on uw1-320-18.uwb.edu  via  uw1-320-16
+LAUNCHED mpd on uw1-320-19.uwb.edu  via  uw1-320-16
+RUNNING: mpd on uw1-320-17.uwb.edu
+RUNNING: mpd on uw1-320-18.uwb.edu
+RUNNING: mpd on uw1-320-19.uwb.edu
+[css534@uw1-320-16 prog2_ugrad]$ Heat2D 100 3000 2700 500 > out1.txt
+Elapsed time = 1585300
+[css534@uw1-320-16 prog2_ugrad]$ mpirun -n 4 Heat2D_mpi 100 3000 2700 500 4 > out4.txt
+rank[0]'s range = 0 ~ 24
+rank[1]'s range = 25 ~ 49
+rank[3]'s range = 75 ~ 99
+rank[2]'s range = 50 ~ 74
+Elapsed time = 1333788
+[css534@uw1-320-16 prog2_ugrad]$ diff out1.txt out4.txt
+[css534@uw1-320-16 prog2_ugrad]$ 
+[css534@uw1-320-16 prog2_ugrad]$ 
+[css534@uw1-320-16 prog2_ugrad]$ Heat2D 300 3000 2700 0
+Elapsed time = 13916882
+[css534@uw1-320-16 prog2_ugrad]$ mpirun -n 1 Heat2D_mpi 300 3000 2700 0 1
+rank[0]'s range = 0 ~ 299
+Elapsed time = 22726236
+[css534@uw1-320-16 prog2_ugrad]$ mpirun -n 1 Heat2D_mpi 300 3000 2700 0 2
+rank[0]'s range = 0 ~ 299
+Elapsed time = 11448878
+[css534@uw1-320-16 prog2_ugrad]$ mpirun -n 1 Heat2D_mpi 300 3000 2700 0 4
+rank[0]'s range = 0 ~ 299
+Elapsed time = 5802465
+[css534@uw1-320-16 prog2_ugrad]$ mpirun -n 2 Heat2D_mpi 300 3000 2700 0 1
+rank[0]'s range = 0 ~ 149
+rank[1]'s range = 150 ~ 299
+Elapsed time = 12040398
+[css534@uw1-320-16 prog2_ugrad]$ mpirun -n 2 Heat2D_mpi 300 3000 2700 0 2
+rank[1]'s range = 150 ~ 299
+rank[0]'s range = 0 ~ 149
+Elapsed time = 6509480
+[css534@uw1-320-16 prog2_ugrad]$ mpirun -n 2 Heat2D_mpi 300 3000 2700 0 4
+rank[1]'s range = 150 ~ 299
+rank[0]'s range = 0 ~ 149
+Elapsed time = 3739326
+[css534@uw1-320-16 prog2_ugrad]$ mpirun -n 4 Heat2D_mpi 300 3000 2700 0 1
+rank[0]'s range = 0 ~ 74
+rank[2]'s range = 150 ~ 224
+rank[1]'s range = 75 ~ 149
+rank[3]'s range = 225 ~ 299
+Elapsed time = 6569269
+[css534@uw1-320-16 prog2_ugrad]$ mpirun -n 4 Heat2D_mpi 300 3000 2700 0 2
+rank[0]'s range = 0 ~ 74
+rank[1]'s range = 75 ~ 149
+rank[2]'s range = 150 ~ 224
+rank[3]'s range = 225 ~ 299
+Elapsed time = 3855631
+[css534@uw1-320-16 prog2_ugrad]$ mpirun -n 4 Heat2D_mpi 300 3000 2700 0 4
+rank[0]'s range = 0 ~ 74
+rank[2]'s range = 150 ~ 224
+rank[1]'s range = 75 ~ 149
+rank[3]'s range = 225 ~ 299
+Elapsed time = 2463088
+[css534@uw1-320-16 prog2_ugrad]$ mpdallexit
+[css534@uw1-320-16 prog2_ugrad]$ 

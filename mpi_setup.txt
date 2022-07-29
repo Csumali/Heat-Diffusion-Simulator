@@ -1,0 +1,95 @@
+The process for setting it up to run the first time for each user is
+cumbersome.  After the initial user set-up it works well without much
+fuss.
+
+# login as self
+
+# Need to be able to ssh without a password to other machines in
+# order to use MPICH.
+# run setup_mpi_cluster.sh. this creates ssh-keygen under ./.shh 
+./setup_mpi_cluster.sh
+
+# The first time a new host is added to the first "ring"; it needs to be
+# established by a "yes" response to "continue connecting".  Every time the
+# output hangs, type "yes".
+
+# Note that setup_mpi_cluster.sh must have created this ring but just
+# in case login each remote machine to check if you no longer need to type
+# anythings to get there.
+
+ssh cssmpi1h
+ssh cssmpi2h
+ssh cssmpi3h
+ssh cssmpi4h
+ssh cssmpi5h
+ssh cssmpi6h
+ssh cssmpi7h
+ssh cssmpi8h
+
+# make file .mpd.conf  
+vi/emacs/pico .mpd.conf    
+
+# in it write one line:
+secretword=<secretword>
+
+# where <secretword> is a secure key you create but not your normal password
+# save the file
+
+# set the correct permissions on this file (other permissions won't work)
+chmod 600 .mpd.conf
+
+# create the mpd.hosts file in your home directory. The file should
+include a list of cssmpi machines as seen in /home/NETID/css434/lab2/mpd.hosts:
+cssmpi2h
+cssmpi3h
+cssmpi4h
+
+Note that you should not include cssmpi1h where you are logging in.
+
+# edit .bash_profile file as follows:
+
+export PATH=/usr/apps/mpich121-`uname -p`/bin:$PATH
+export JAVAPATH=/usr/java/latest
+export CLASSPATH=$CLASSPATH:/usr/apps/mpiJava-`uname -p`/lib/classes:.
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/apps/mpiJava-`uname -p`/lib
+export PATH=/usr/apps/mpiJava-`uname -p`/src/scripts:$JAVAPATH/bin:$PATH
+
+# either relogin or type at the command line:
+source .bash_profile
+
+# test that your set-up works on the current host
+mpd &
+mpiexec -n 1 /bin/hostname
+mpdallexit
+
+# if you get an error or warning this is a problem.  
+# You should get the hostname of your current host
+
+CSSmpdboot -n 4 -v
+mpdallexit
+
+# Note that, if you want to use all 8 machines, you have to list 7
+# machine names in your ~/mpd.hosts file. Then, type
+
+CSSmpdboot -n 8 -v
+mpdallexit
+
+# Now, you are ready to run a mpiJava program.
+To compile:
+javac *.java
+
+# to run 
+CSSmpdboot -n #cpus -v
+mpirun -n #cpus java Hello
+mpirun -n #cpus java MatrixMult size
+mpirun -n #cpus java MyProgram
+
+# for your convenience, java_mpirun.sh is provided, but HW2 should be 
+# executed directly with mpirun, (because of too many arguments.)
+./java_mpirun #cpus Hello
+./java_mpirun #cpus MatrixMult size
+./java_mpirun #cpus MyProgram
+
+# to stop
+mpdallexit
+
